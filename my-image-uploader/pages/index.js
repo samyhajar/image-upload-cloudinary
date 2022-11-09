@@ -1,10 +1,45 @@
+import { AdvancedImage } from '@cloudinary/react';
+import { Cloudinary } from '@cloudinary/url-gen';
+import { fill } from '@cloudinary/url-gen/actions/resize';
+import axios from 'axios';
+import { buildUrl } from 'cloudinary-build-url';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useState } from 'react';
 import styles from '../styles/Home.module.scss';
 
-export default function Home() {
+export default function Home(props) {
   const [imageSrc, setImageSrc] = useState();
   const [uploadData, setUploadData] = useState();
+
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: 'dbyiupffc',
+    },
+  });
+
+  const propertyNames = Object.values(props);
+  console.log('HELLO', propertyNames);
+
+  const url = buildUrl(`[${imageSrc}]`, {
+    cloud: {
+      cloudName: '[dbyiupffc]',
+      apiKey: '[276559622592629]',
+      apiSecret: '[An3zkEUfvH4hmIZj2COgB4-dRI4]',
+    },
+
+    transformations: {
+      effect: {
+        name: 'pixelate',
+        value: 40,
+      },
+    },
+  });
+
+  const myImage = cld.image('my-uploads');
+
+  // Resize to 250 x 20 pixels using the 'fill' crop mode.
+  myImage.resize(fill().width(250).height(250));
 
   /**
    * handleOnChange
@@ -62,9 +97,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Image Uploader</h1>
-
         <p className={styles.description}>Upload your image to Cloudinary!</p>
-
         <form
           className={styles.form}
           method="post"
@@ -86,17 +119,43 @@ export default function Home() {
           {uploadData && (
             <code>
               <pre>{JSON.stringify(uploadData, null, 2)}</pre>
+              <h3>Metadata: </h3>
+              <p>{JSON.stringify(uploadData.width, null, 2)}</p>
+              <p>{JSON.stringify(uploadData.height, null, 2)}</p>
+              <p>{(uploadData.original_filename.replace(/"/g, ''), null, 2)}</p>
             </code>
           )}
         </form>
+        {propertyNames.map((list) => (
+          <li>
+            {list}
+            {propertyNames.map((item) => (
+              <img key={item} src={item} />
+            ))}
+          </li>
+        ))}
       </main>
-
-      <footer className={styles.footer}>
-        <p>
-          Find the tutorial on{' '}
-          <a href="https://spacejelly.dev/">spacejelly.dev</a>!
-        </p>
-      </footer>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(
+    'https://276559622592629:An3zkEUfvH4hmIZj2COgB4-dRI4@api.cloudinary.com/v1_1/dbyiupffc/resources/search',
+  );
+  const data = await res.json();
+  var listUrl = function () {
+    return data.resources.slice(0, 80).map(function (contact) {
+      return contact.url;
+    });
+  };
+
+  const data1 = JSON.parse(JSON.stringify(listUrl()));
+
+  const dataFinal = Object.assign({}, data1);
+  // console.log('newARRAY :', newArray); // [100, 200, 300]
+
+  // Pass data to the page via props
+  return { props: dataFinal };
 }
