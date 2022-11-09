@@ -33,7 +33,23 @@ export default function Home() {
     const fileInput = Array.from(form.elements).find(
       ({ name }) => name === 'file',
     );
-    console.log('fileInput', fileInput);
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append('file', file);
+    }
+    formData.append('upload_preset', 'my-uploads');
+    const data = await fetch(
+      'https://api.cloudinary.com/v1_1/dbyiupffc/image/upload',
+      {
+        method: 'POST',
+        body: formData,
+      },
+    ).then((r) => r.json());
+    setImageSrc(data.secure_url);
+    setUploadData(data);
+
+    console.log('fileInput.files', fileInput.files);
   }
 
   return (
