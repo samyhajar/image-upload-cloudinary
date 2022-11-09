@@ -1,6 +1,6 @@
+import Head from 'next/head';
 import { useState } from 'react';
-import Head from 'next/head'
-import styles from '../styles/Home.module.scss'
+import styles from '../styles/Home.module.scss';
 
 export default function Home() {
   const [imageSrc, setImageSrc] = useState();
@@ -14,10 +14,10 @@ export default function Home() {
   function handleOnChange(changeEvent) {
     const reader = new FileReader();
 
-    reader.onload = function(onLoadEvent) {
+    reader.onload = function (onLoadEvent) {
       setImageSrc(onLoadEvent.target.result);
       setUploadData(undefined);
-    }
+    };
 
     reader.readAsDataURL(changeEvent.target.files[0]);
   }
@@ -29,6 +29,10 @@ export default function Home() {
 
   async function handleOnSubmit(event) {
     event.preventDefault();
+    const form = event.currentTarget;
+    const fileInput = Array.from(form.elements).find(
+      ({ name }) => name === 'file',
+    );
   }
 
   return (
@@ -40,21 +44,22 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Image Uploader
-        </h1>
+        <h1 className={styles.title}>Image Uploader</h1>
 
-        <p className={styles.description}>
-          Upload your image to Cloudinary!
-        </p>
+        <p className={styles.description}>Upload your image to Cloudinary!</p>
 
-        <form className={styles.form} method="post" onChange={handleOnChange} onSubmit={handleOnSubmit}>
+        <form
+          className={styles.form}
+          method="post"
+          onChange={handleOnChange}
+          onSubmit={handleOnSubmit}
+        >
           <p>
             <input type="file" name="file" />
           </p>
-          
+
           <img src={imageSrc} />
-          
+
           {imageSrc && !uploadData && (
             <p>
               <button>Upload Files</button>
@@ -62,14 +67,19 @@ export default function Home() {
           )}
 
           {uploadData && (
-            <code><pre>{JSON.stringify(uploadData, null, 2)}</pre></code>
+            <code>
+              <pre>{JSON.stringify(uploadData, null, 2)}</pre>
+            </code>
           )}
         </form>
       </main>
 
       <footer className={styles.footer}>
-        <p>Find the tutorial on <a href="https://spacejelly.dev/">spacejelly.dev</a>!</p>
+        <p>
+          Find the tutorial on{' '}
+          <a href="https://spacejelly.dev/">spacejelly.dev</a>!
+        </p>
       </footer>
     </div>
-  )
+  );
 }
