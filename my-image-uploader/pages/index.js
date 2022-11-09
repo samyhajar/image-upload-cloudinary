@@ -33,6 +33,7 @@ export default function Home() {
     const fileInput = Array.from(form.elements).find(
       ({ name }) => name === 'file',
     );
+    console.log('fileInput', fileInput);
   }
 
   return (
