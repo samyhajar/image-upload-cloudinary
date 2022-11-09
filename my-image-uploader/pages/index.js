@@ -91,8 +91,8 @@ export default function Home(props) {
     <div className={styles.container}>
       <Head>
         <title>Image Uploader</title>
-        <meta name="description" content="Upload your image to Cloudinary!" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <main className={styles.main}>
@@ -126,14 +126,20 @@ export default function Home(props) {
             </code>
           )}
         </form>
-        {propertyNames.map((list) => (
-          <li>
-            {list}
-            {propertyNames.map((item) => (
-              <img key={item} src={item} />
-            ))}
-          </li>
-        ))}
+        <div className="container">
+          <div className="row"></div>
+          {propertyNames.map((item) => (
+            <img
+              className="col-md-3"
+              style={{
+                marginTop: '2rem',
+                borderRadius: '50px',
+              }}
+              key={item}
+              src={item}
+            />
+          ))}
+        </div>
       </main>
     </div>
   );
