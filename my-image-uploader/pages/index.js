@@ -97,7 +97,7 @@ export default function Home(props) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Image Uploader</h1>
-        <p className={styles.description}>Upload your image to Cloudinary!</p>
+        <p className={styles.description}> || Just a simpler Version ||</p>
         <form
           className={styles.form}
           method="post"
@@ -134,6 +134,7 @@ export default function Home(props) {
               style={{
                 marginTop: '2rem',
                 borderRadius: '50px',
+                marginLeft: '20px',
               }}
               key={item}
               src={item}
